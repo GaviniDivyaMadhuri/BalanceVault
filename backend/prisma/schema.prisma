@@ -1,0 +1,83 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  ACCOUNT_HOLDER
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum AccountStatus {
+  ACTIVE
+  FROZEN
+  CLOSED
+}
+
+enum EntryType {
+  CREDIT
+  DEBIT
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         UserRole   @default(ACCOUNT_HOLDER)
+  status       UserStatus @default(PENDING)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  accounts     Account[]
+  auditLogs    AuditLog[] @relation("AuditActor")
+}
+
+model Account {
+  id        String        @id @default(uuid())
+  accountNo String        @unique
+  balance   BigInt        @default(0)
+  status    AccountStatus @default(ACTIVE)
+  userId    String
+  createdAt DateTime      @default(now())
+
+  user      User          @relation(fields: [userId], references: [id])
+  entries   LedgerEntry[]
+}
+
+model LedgerEntry {
+  id          String    @id @default(uuid())
+  accountId   String
+  type        EntryType
+  amount      BigInt
+  description String?
+  referenceId String?
+  createdAt   DateTime  @default(now())
+
+  account     Account   @relation(fields: [accountId], references: [id])
+
+  @@index([accountId, createdAt])
+  @@index([referenceId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  actor     User?    @relation("AuditActor", fields: [actorId], references: [id])
+}
