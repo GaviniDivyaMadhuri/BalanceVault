@@ -1,0 +1,73 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f7fb;
+  color: #172033;
+}
+
+.navbar {
+  background: #142b4a;
+  color: white;
+  padding: 22px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h2 {
+  font-size: 25px;
+}
+
+.navbar span {
+  color: #cbd5e1;
+}
+
+.dashboard {
+  max-width: 1000px;
+  margin: 90px auto;
+  padding: 20px;
+}
+
+.welcome {
+  color: #2563eb;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+.dashboard h1 {
+  font-size: 42px;
+  max-width: 650px;
+  margin-bottom: 18px;
+}
+
+.description {
+  color: #64748b;
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 650px;
+}
+
+.status-card {
+  margin-top: 45px;
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+  max-width: 500px;
+}
+
+.status-card h3 {
+  margin-bottom: 18px;
+}
+
+.status-card p {
+  margin-top: 12px;
+  color: #475569;
+}
