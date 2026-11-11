@@ -32,7 +32,7 @@ Continue beyond the health-check starter by implementing the BalanceVault accoun
 **What I did:**
 - Inspected the middleware and route behavior, expanded approval to create an account in the same transaction, limited the admin user list to account holders, and added regression tests for admin authorization.
 
-**Commit:** `c11c201` — authenticated ledger and account workflows.
+**Commit:** `c11c201` — authenticated ledger and account workflows (local commit; GitHub remote not created yet).
 
 ## Entry 3 — 2026-11-11: Checking authorization and transfer integrity
 
@@ -48,7 +48,7 @@ Review the finance workflows for the user-data boundary and make transfers safe 
 **What I did:**
 - Corrected the test stubs and assertions; added explicit regression coverage for suspended recipients, overdrafts, admin denial, cross-account ledger access, rate limiting, and paired ledger/audit writes.
 
-**Commit:** `c11c201` — backend workflow and authorization tests.
+**Commit:** `c11c201` — backend workflow and authorization tests (local commit; GitHub remote not created yet).
 
 ## Entry 4 — 2026-11-11: Building the account-holder and admin dashboard
 
@@ -64,7 +64,7 @@ Replace the connectivity-only page with usable registration, account, transfer, 
 **What I did:**
 - Replaced the starter global styles, made error/status messaging accessible, added refresh behavior, and connected the UI to the authenticated API actions.
 
-**Commit:** `88e045a` — account and admin dashboard.
+**Commit:** `88e045a` — account and admin dashboard (local commit; GitHub remote not created yet).
 
 ## Entry 5 — 2026-11-11: Preparing threat and deployment documentation
 
@@ -80,4 +80,4 @@ Document only behavior that exists, add threat thinking tied to test evidence, a
 **What I did:**
 - Marked those limitations explicitly rather than inventing acceptance criteria or claiming deployment success. Kept deployment credentials as unset environment variables and the repository unpublished.
 
-**Commit:** pending; documentation will be committed locally after final verification.
+**Commit:** `66d4eba` — threat model, deployment blueprint, and setup docs (local commit; GitHub remote not created yet).
