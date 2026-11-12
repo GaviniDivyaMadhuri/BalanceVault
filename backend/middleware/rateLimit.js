@@ -5,6 +5,7 @@ const { createClient } = require("redis");
 const redisClient = process.env.REDIS_URL
   ? createClient({ url: process.env.REDIS_URL })
   : null;
+let redisConnectionPromise = null;
 
 if (redisClient) {
   redisClient.on("error", (error) => {
@@ -20,7 +21,7 @@ const authRateLimit = rateLimit({
   ...(redisClient
     ? {
         store: new RedisStore({
-          sendCommand: (...args) => redisClient.sendCommand(args)
+        sendCommand: (...args) => sendRedisCommand(args)
         })
       }
     : {}),
@@ -36,9 +37,22 @@ async function connectRateLimitStore() {
     throw new Error("REDIS_URL must be configured in production");
   }
 
-  if (redisClient && !redisClient.isOpen) {
-    await redisClient.connect();
+  if (redisClient) {
+    if (!redisClient.isOpen && !redisConnectionPromise) {
+      redisConnectionPromise = redisClient.connect().finally(() => {
+        redisConnectionPromise = null;
+      });
+    }
+
+    if (redisConnectionPromise) {
+      await redisConnectionPromise;
+    }
   }
+}
+
+async function sendRedisCommand(args) {
+  await connectRateLimitStore();
+  return redisClient.sendCommand(args);
 }
 
 async function checkRateLimitStore() {

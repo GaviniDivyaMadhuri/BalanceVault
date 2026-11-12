@@ -137,4 +137,21 @@ Use my Render account to complete the API deployment, but avoid paid compute and
 **What I did:**
 - Confirmed the API service is on the $0/month plan, the runtime and migration database environment variables remain secret, and the Redis-compatible service is available. I am changing the blueprint install command to a lockfile-aware `npm install` fallback and will verify the next Render build before reporting the API as deployed.
 
+**Commit:** `ff8e2e3` — Render build command fallback.
+
+## Entry 9 - 2026-11-12: Fixing Redis rate-limit startup
+
+**Prompt used:**
+Investigate why the next Render deployment failed after the build and database migrations succeeded, then fix and verify the startup failure without exposing credentials.
+
+**AI-generated output:**
+- Read the Render runtime logs and traced the `ClientClosedError` to the Redis-backed rate-limit store issuing its initial script-load commands before the Redis client connected.
+
+**What needed improvement:**
+- The Redis client was connected only later in `startServer()`, after the rate-limit store constructor had already sent commands. This ordering caused the deployed process to exit before listening for requests.
+
+**What I did:**
+- Made Redis command dispatch await one shared connection attempt, so both the rate-limit store initialization and API startup wait for the client before sending commands.
+- Ran the backend test suite; all 12 active tests passed and the opt-in PostgreSQL integration test remained skipped by default.
+
 **Commit:** pending.

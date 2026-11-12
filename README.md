@@ -95,9 +95,9 @@ The PostgreSQL integration test uses a transaction that is intentionally rolled 
 
 ## Deployment status
 
-The public frontend URL is [balancevault-frontend.onrender.com](https://balancevault-frontend.onrender.com). It returned HTTP 200 when checked on 2026-11-12. The deployed frontend's configured API host, `https://ledger-wviy.onrender.com`, returned HTTP 403 from `/health`; the API host in this Render Blueprint, `https://balancevault-api.onrender.com`, returned HTTP 404. Therefore the page is reachable, but end-to-end account functionality is not verified as operational.
+The public frontend URL is [balancevault-frontend.onrender.com](https://balancevault-frontend.onrender.com). It returned HTTP 200 when checked on 2026-11-12. The latest API service built successfully and applied all database migrations, but its process exited while initializing the Redis-backed rate limiter: the Redis client was asked to load rate-limit scripts before it had connected. The startup path has been corrected in source; the API still needs a successful redeploy and `/health` and `/ready` checks before end-to-end functionality can be claimed.
 
-The API host in the deployed frontend does not match the `balancevault-api.onrender.com` host configured below in the Render Blueprint. Confirm the intended backend service and update/redeploy the frontend build with the matching `VITE_API_URL` before claiming the deployed app is working.
+After the API is live, set the frontend's `VITE_API_URL` to that service's actual URL and redeploy the frontend, then verify registration, login, account, transfer, and admin workflows.
 
 ## Render deployment configuration
 
