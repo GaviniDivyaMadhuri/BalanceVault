@@ -31,7 +31,7 @@ This is a demo ledger, not a financial service. Treat every account and amount a
 ## Residual risks to verify before any real deployment
 
 - The challenge statement supplied for this project is high-level and does not enumerate individual functional acceptance checks.
-- The public frontend responds, but the API host currently returns HTTP 503; a full browser end-to-end session has not been verified.
+- The public frontend responds, but its configured API host returned HTTP 403 and the host in `render.yaml` returned HTTP 404 on 2026-11-12; a full browser end-to-end session has not been verified.
 - The database runtime and migration roles are configured and locally verified; deployment still requires supplying both corresponding connection strings to Render.
 - Production database migrations, Redis service behavior, and administrator bootstrap have not been verified against the live deployment.
 - This demo has no transfer idempotency key, fraud controls, user-driven recovery, or independent tamper-evident audit storage. Repeated client submissions may create multiple valid transfers.

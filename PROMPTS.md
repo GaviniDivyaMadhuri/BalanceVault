@@ -97,7 +97,7 @@ Use the challenge statement that was provided to determine whether the six state
 **What I did:**
 - Corrected the docs to distinguish implemented code from verified live behavior, document the API-host mismatch and 503, and state clearly that database role separation is not implemented here.
 
-**Commit:** pending; documentation correction is being committed after verification.
+**Commit:** `071cc14` - database and documentation hardening.
 
 ## Entry 7 - 2026-11-12: Enforcing database invariants and runtime least privilege
 
@@ -118,4 +118,6 @@ Complete the database work without starting deployment. Enforce ledger invariant
 
 **Verification:** `npm test` passed (12 passed; opt-in database test skipped by default), `DATABASE_INTEGRATION_TESTS=1 npm --prefix backend run test:db` passed against PostgreSQL, frontend lint/build passed, Prisma validation passed, and migration status reported up to date. The live Render API remains unavailable and deployment is intentionally not part of this work.
 
-**Commit:** pending.
+**Commit:** `071cc14` - database hardening, integration coverage, and documentation.
+
+**Deployment status recheck (2026-11-12):** The public frontend returned HTTP 200. Its configured API host returned HTTP 403 at `/health`, while the API hostname in `render.yaml` returned HTTP 404 at `/health` and `/ready`. No deployment changes were made.
