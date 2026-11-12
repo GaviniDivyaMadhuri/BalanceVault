@@ -14,7 +14,8 @@
     "test:db": "node --test test/database.integration.test.js",
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "bootstrap-admin": "node scripts/bootstrap-admin.js"
+    "bootstrap-admin": "node scripts/bootstrap-admin.js",
+    "admin:reset-password": "node scripts/reset-admin-password.js"
   },
   "keywords": [],
   "author": "",

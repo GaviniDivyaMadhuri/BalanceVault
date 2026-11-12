@@ -10,7 +10,8 @@
     "db:generate": "npm --prefix backend run db:generate",
     "db:validate": "npm --prefix backend run db:validate",
     "db:migrate": "npm --prefix backend run db:migrate:dev",
-    "db:deploy": "npm --prefix backend run db:migrate"
+    "db:deploy": "npm --prefix backend run db:migrate",
+    "admin:reset-password": "npm --prefix backend run admin:reset-password"
   },
   "keywords": ["ledger", "account-management", "prisma"],
   "license": "UNLICENSED"

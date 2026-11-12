@@ -45,6 +45,10 @@ See [THREATS.md](./THREATS.md) for the threat model, controls, test mapping, and
 
 The provisioning command creates a random runtime password and stores the resulting runtime `DATABASE_URL` and owner `MIGRATION_DATABASE_URL` in the ignored `backend/.env`. It refuses to rotate an existing runtime role. Never commit or share this file. For deployment, configure both URLs as separate private environment variables.
 
+### Resetting a forgotten administrator password
+
+There is no public password-reset endpoint. To reset the existing administrator locally, set `ADMIN_RESET_EMAIL` (or use the existing `ADMIN_BOOTSTRAP_EMAIL`) in the ignored `backend/.env`, then run `npm run admin:reset-password` from the repository root in an interactive terminal. The command verifies that the target is an active administrator, requires an explicit `RESET` confirmation, prompts for a new password without echoing it, and records an audit event. It uses the configured local `DATABASE_URL`; do not run it against a database unless you are authorized to administer that database. Never share `.env` or the new password.
+
 4. Start the API and frontend in separate terminals:
 
    ```sh
