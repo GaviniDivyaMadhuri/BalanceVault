@@ -95,9 +95,9 @@ The PostgreSQL integration test uses a transaction that is intentionally rolled 
 
 ## Deployment status
 
-The public frontend URL is [balancevault-frontend.onrender.com](https://balancevault-frontend.onrender.com). It returned HTTP 200 when checked on 2026-11-12. The latest API service built successfully and applied all database migrations, but its process exited while initializing the Redis-backed rate limiter: the Redis client was asked to load rate-limit scripts before it had connected. The startup path has been corrected in source; the API still needs a successful redeploy and `/health` and `/ready` checks before end-to-end functionality can be claimed.
+The public frontend URL is [balancevault-frontend.onrender.com](https://balancevault-frontend.onrender.com). The API is deployed at [balancevault-api-v2.onrender.com](https://balancevault-api-v2.onrender.com); `/health` and `/ready` both returned HTTP 200 on 2026-11-12. The first API deployment built and migrated successfully but exited because the Redis rate-limit store sent its initial commands before the Redis client connected. The startup path was corrected, the new revision was deployed, and both endpoints were rechecked.
 
-After the API is live, set the frontend's `VITE_API_URL` to that service's actual URL and redeploy the frontend, then verify registration, login, account, transfer, and admin workflows.
+The existing frontend service is not present in the Render workspace used for the API, so its build environment could not be updated there. Set its `VITE_API_URL` to `https://balancevault-api-v2.onrender.com` and redeploy it, then verify registration, login, account, transfer, and admin workflows.
 
 ## Render deployment configuration
 

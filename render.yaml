@@ -28,7 +28,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://balancevault-api.onrender.com
+        value: https://balancevault-api-v2.onrender.com
     routes:
       - type: rewrite
         source: /*

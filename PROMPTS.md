@@ -152,6 +152,6 @@ Investigate why the next Render deployment failed after the build and database m
 
 **What I did:**
 - Made Redis command dispatch await one shared connection attempt, so both the rate-limit store initialization and API startup wait for the client before sending commands.
-- Ran the backend test suite; all 12 active tests passed and the opt-in PostgreSQL integration test remained skipped by default.
+- Ran the backend test suite; all 12 active tests passed and the opt-in PostgreSQL integration test remained skipped by default. Deployed the fix and verified that `/health` and `/ready` both returned HTTP 200.
 
-**Commit:** pending.
+**Commit:** `1f56978` — Redis rate-limit startup fix.
