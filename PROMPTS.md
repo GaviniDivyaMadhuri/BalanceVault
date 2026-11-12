@@ -121,3 +121,20 @@ Complete the database work without starting deployment. Enforce ledger invariant
 **Commit:** `071cc14` - database hardening, integration coverage, and documentation.
 
 **Deployment status recheck (2026-11-12):** The public frontend returned HTTP 200. Its configured API host returned HTTP 403 at `/health`, while the API hostname in `render.yaml` returned HTTP 404 at `/health` and `/ready`. No deployment changes were made.
+
+## Entry 8 - 2026-11-12: Deploying the API on Render's free tier
+
+**Prompt used:**
+Use my Render account to complete the API deployment, but avoid paid compute and do not share database credentials in chat.
+
+**AI-generated output:**
+- Created a free Singapore Render Key Value instance for the API's Redis-compatible rate limiter and prepared a free API web service from the public GitHub repository.
+- The first deployment failed during the npm build step before the API started.
+
+**What needed improvement:**
+- The configured `npm ci` build command failed in Render and emitted npm usage output. The same lockfile-backed `npm ci --dry-run` passed locally, so the remote failure was not fully explained by the available logs.
+
+**What I did:**
+- Confirmed the API service is on the $0/month plan, the runtime and migration database environment variables remain secret, and the Redis-compatible service is available. I am changing the blueprint install command to a lockfile-aware `npm install` fallback and will verify the next Render build before reporting the API as deployed.
+
+**Commit:** pending.

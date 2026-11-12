@@ -3,7 +3,7 @@ services:
     name: balancevault-api
     runtime: node
     rootDir: backend
-    buildCommand: npm ci && npm run db:generate
+    buildCommand: npm install --include=dev --no-audit --no-fund && npm run db:generate
     startCommand: npm run db:migrate && npm start
     healthCheckPath: /ready
     envVars:
