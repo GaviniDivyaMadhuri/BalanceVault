@@ -28,8 +28,10 @@ This is a demo ledger, not a financial service. Treat every account and amount a
 
 ## Residual risks to verify before any real deployment
 
-- Challenge-specific acceptance requirements are login-gated and were unavailable during this implementation.
-- No live production deployment, database migration, Redis instance, administrator bootstrap, or browser end-to-end session has been verified here.
+- The challenge statement supplied for this project is high-level and does not enumerate individual functional acceptance checks.
+- The public frontend responds, but the API host currently returns HTTP 503; a full browser end-to-end session has not been verified.
+- The repository config uses one database URL; separate PostgreSQL roles mentioned in the submission draft are not implemented or verified here.
+- Production database migrations, Redis service behavior, and administrator bootstrap have not been verified against the live deployment.
 - This demo has no transfer idempotency key, fraud controls, user-driven recovery, or independent tamper-evident audit storage. Repeated client submissions may create multiple valid transfers.
 - The API does not model currency conversion, fees, limits, dispute handling, or regulatory requirements.
 - Run the complete tests against a disposable PostgreSQL database and test deployment behavior before inviting external users.

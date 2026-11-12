@@ -13,7 +13,9 @@ BalanceVault is a demonstration account-management app built with React, Express
 - Production CORS allowlisting and one-hop reverse-proxy configuration for accurate client IP rate limiting.
 - Liveness (`/health`) and dependency readiness (`/ready`) endpoints.
 
-The challenge's ten detailed acceptance criteria were not available from the public page during this work. The logged-in problem statement redirected to the challenge login page, so this README describes only the functionality present in this repository; confirm it against the official criteria before submission.
+The supplied challenge statement describes the project at a high level and gives a six-step work plan; it does not list ten separate functional acceptance criteria. This README describes what is implemented in this repository and distinguishes code-level checks from live-service verification.
+
+The challenge draft also mentions separate PostgreSQL roles. This repository currently uses one `DATABASE_URL`; separate database roles are not implemented or verified here.
 
 See [THREATS.md](./THREATS.md) for the threat model, controls, test mapping, and residual risks.
 
@@ -86,10 +88,16 @@ npm run build
 
 The backend tests include exact decimal conversion, unauthenticated access denial, account-holder/admin separation, owner-only ledger access, and rejection of an overdraft before ledger or success-audit writes. Tests use Node's built-in runner and do not require a live database.
 
-## Render deployment
+## Deployment status
+
+The public frontend URL is [balancevault-frontend.onrender.com](https://balancevault-frontend.onrender.com). It returned the application HTML successfully when checked on 2026-11-12. Its built JavaScript currently targets `https://ledger-wviy.onrender.com`; that API's `/health` endpoint returned HTTP 503 during the same check. Therefore the page is reachable, but end-to-end account functionality is not verified as operational.
+
+The API host in the deployed frontend does not match the `balancevault-api.onrender.com` host configured below in the Render Blueprint. Confirm the intended backend service and update/redeploy the frontend build with the matching `VITE_API_URL` before claiming the deployed app is working.
+
+## Render deployment configuration
 
 `render.yaml` describes the frontend static site and API service. In Render, configure the external PostgreSQL connection string and Redis URL as private environment values; the blueprint deliberately does not contain credentials or provision paid infrastructure. Set a generated `JWT_SECRET`, and verify `/ready` returns HTTP 200 after migration deployment. The API service's build command generates Prisma Client; its start command applies migrations and starts the server.
 
 If Render assigns a different frontend hostname, update `FRONTEND_ORIGIN` to that exact origin. The first admin must be bootstrapped from an authorized deployment shell after an account is registered.
 
-The source is committed locally, but no GitHub repository or Render account has been connected in this environment. No remote repository or live deployment URL has been created.
+The source is pushed to [GaviniDivyaMadhuri/BalanceVault](https://github.com/GaviniDivyaMadhuri/BalanceVault). The repository is public; the challenge instructions provided earlier recommended keeping it private until the deadline.

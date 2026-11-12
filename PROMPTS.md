@@ -75,9 +75,26 @@ Document only behavior that exists, add threat thinking tied to test evidence, a
 - Prepared a threat model, Render Blueprint, API/setup documentation, and AI-development notes.
 
 **What needed improvement:**
-- The authenticated problem-statement content, GitHub sign-in, and Render account access are unavailable in this environment, so neither the ten official criteria nor a live deployment can be verified.
+- At this point, the challenge statement had not been supplied in the conversation. GitHub sign-in and Render account access were also unavailable.
 
 **What I did:**
-- Marked those limitations explicitly rather than inventing acceptance criteria or claiming deployment success. Kept deployment credentials as unset environment variables and the repository unpublished.
+- Prepared a blueprint with secrets unset and documented which deployment actions remained unverified.
 
-**Commit:** `66d4eba` — threat model, deployment blueprint, and setup docs (local commit; GitHub remote not created yet).
+**Commit:** `66d4eba` — threat model, deployment blueprint, and setup docs.
+
+## Entry 6 — 2026-11-12: Correcting scope and checking the live frontend/API
+
+**Prompt used:**
+Use the challenge statement that was provided to determine whether the six stated work areas are actually complete, and don't assume there are ten hidden requirements.
+
+**What the AI produced:**
+- Compared the submitted six-step work plan against the repository and public deployment endpoints.
+- Confirmed the repository is pushed and the frontend serves, but found the frontend's configured API host returns HTTP 503 and differs from the host in `render.yaml`.
+
+**What needed improvement:**
+- Previous README/threat notes incorrectly described ten inaccessible criteria and claimed no deployment existed. The submission draft also mentions separate PostgreSQL roles that are not configured in this repository.
+
+**What I did:**
+- Corrected the docs to distinguish implemented code from verified live behavior, document the API-host mismatch and 503, and state clearly that database role separation is not implemented here.
+
+**Commit:** pending; documentation correction is being committed after verification.
