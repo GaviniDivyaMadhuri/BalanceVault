@@ -98,3 +98,24 @@ Use the challenge statement that was provided to determine whether the six state
 - Corrected the docs to distinguish implemented code from verified live behavior, document the API-host mismatch and 503, and state clearly that database role separation is not implemented here.
 
 **Commit:** pending; documentation correction is being committed after verification.
+
+## Entry 7 - 2026-11-12: Enforcing database invariants and runtime least privilege
+
+**Prompt used:**
+Complete the database work without starting deployment. Enforce ledger invariants in PostgreSQL, separate the API runtime role from the migration owner, and verify database constraints, ledger transactions, and audit writes without leaving test data.
+
+**AI-generated output:**
+- Added database constraints for nonnegative balances and positive ledger amounts, an account-owner index, a non-login runtime privilege role, and a provisioning script for a dedicated runtime login.
+- Added an opt-in PostgreSQL integration test that checks rejected invalid values, a balanced ledger transfer, an audit event, and transaction rollback.
+
+**What needed improvement:**
+- The first integration test verified safe conditional overdraft handling, but did not directly exercise PostgreSQL's check constraints. A successful application-level guard alone would not prove the database rejects invalid values.
+- The threat model still described database role separation as unimplemented after the role setup was added.
+
+**What I did:**
+- Added savepoint-isolated negative-balance and zero-ledger-amount attempts and asserted PostgreSQL's check-violation error, then continued the transaction test and verified rollback left no fixture user.
+- Provisioned a random-password runtime login locally without printing or committing its credential, verified it can run the integration test, corrected the threat model, and confirmed all migrations are applied.
+
+**Verification:** `npm test` passed (12 passed; opt-in database test skipped by default), `DATABASE_INTEGRATION_TESTS=1 npm --prefix backend run test:db` passed against PostgreSQL, frontend lint/build passed, Prisma validation passed, and migration status reported up to date. The live Render API remains unavailable and deployment is intentionally not part of this work.
+
+**Commit:** pending.

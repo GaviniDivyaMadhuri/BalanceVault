@@ -55,6 +55,8 @@ model Account {
 
   user      User          @relation(fields: [userId], references: [id])
   entries   LedgerEntry[]
+
+  @@index([userId])
 }
 
 model LedgerEntry {

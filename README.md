@@ -15,19 +15,19 @@ BalanceVault is a demonstration account-management app built with React, Express
 
 The supplied challenge statement describes the project at a high level and gives a six-step work plan; it does not list ten separate functional acceptance criteria. This README describes what is implemented in this repository and distinguishes code-level checks from live-service verification.
 
-The challenge draft also mentions separate PostgreSQL roles. This repository currently uses one `DATABASE_URL`; separate database roles are not implemented or verified here.
+Database migrations create `balancevault_runtime` as a non-login role. The API connection should use a dedicated login granted membership in that role; it can read/insert/update users and accounts and read/insert ledger and audit rows, but cannot update/delete ledger or audit history. `MIGRATION_DATABASE_URL` must use a separate owner/migration login. The runtime login itself is provisioned outside Prisma migrations because login credentials are secrets.
 
 See [THREATS.md](./THREATS.md) for the threat model, controls, test mapping, and residual risks.
 
 ## Requirements
 
 - Node.js 20 or newer
-- PostgreSQL
+- PostgreSQL with separate runtime and migration connections
 - Redis for production deployments
 
 ## Local setup
 
-1. Copy `backend/.env.example` to `backend/.env` and set `DATABASE_URL` and a long random `JWT_SECRET`. For local development, Redis can be omitted. Add `REDIS_URL` to use Redis locally.
+1. Copy `backend/.env.example` to `backend/.env`. Set `DATABASE_URL` to the least-privileged runtime login and `MIGRATION_DATABASE_URL` to the migration/owner connection. Set a long random `JWT_SECRET`. For local development, Redis can be omitted; add `REDIS_URL` to use Redis locally.
 2. Install dependencies:
 
    ```sh
@@ -35,12 +35,15 @@ See [THREATS.md](./THREATS.md) for the threat model, controls, test mapping, and
    npm --prefix frontend ci
    ```
 
-3. Generate the Prisma client and apply migrations to your development database:
+3. Generate the Prisma client, apply migrations with the owner connection, and provision a dedicated runtime login:
 
    ```sh
    npm run db:generate
    npm run db:migrate
+   npm --prefix backend run db:provision-runtime
    ```
+
+The provisioning command creates a random runtime password and stores the resulting runtime `DATABASE_URL` and owner `MIGRATION_DATABASE_URL` in the ignored `backend/.env`. It refuses to rotate an existing runtime role. Never commit or share this file. For deployment, configure both URLs as separate private environment variables.
 
 4. Start the API and frontend in separate terminals:
 
@@ -88,6 +91,8 @@ npm run build
 
 The backend tests include exact decimal conversion, unauthenticated access denial, account-holder/admin separation, owner-only ledger access, and rejection of an overdraft before ledger or success-audit writes. Tests use Node's built-in runner and do not require a live database.
 
+The PostgreSQL integration test uses a transaction that is intentionally rolled back and checks that no fixture user remains. Run it explicitly against the configured database with `DATABASE_INTEGRATION_TESTS=1 npm --prefix backend run test:db`.
+
 ## Deployment status
 
 The public frontend URL is [balancevault-frontend.onrender.com](https://balancevault-frontend.onrender.com). It returned the application HTML successfully when checked on 2026-11-12. Its built JavaScript currently targets `https://ledger-wviy.onrender.com`; that API's `/health` endpoint returned HTTP 503 during the same check. Therefore the page is reachable, but end-to-end account functionality is not verified as operational.
@@ -96,7 +101,7 @@ The API host in the deployed frontend does not match the `balancevault-api.onren
 
 ## Render deployment configuration
 
-`render.yaml` describes the frontend static site and API service. In Render, configure the external PostgreSQL connection string and Redis URL as private environment values; the blueprint deliberately does not contain credentials or provision paid infrastructure. Set a generated `JWT_SECRET`, and verify `/ready` returns HTTP 200 after migration deployment. The API service's build command generates Prisma Client; its start command applies migrations and starts the server.
+`render.yaml` describes the frontend static site and API service. In Render, configure the runtime `DATABASE_URL`, privileged `MIGRATION_DATABASE_URL`, and Redis URL as private environment values; the blueprint deliberately does not contain credentials or provision paid infrastructure. Set a generated `JWT_SECRET`, and verify `/ready` returns HTTP 200 after migration deployment. The API service's build command generates Prisma Client; its start command applies migrations with the migration connection and starts the server with the runtime connection.
 
 If Render assigns a different frontend hostname, update `FRONTEND_ORIGIN` to that exact origin. The first admin must be bootstrapped from an authorized deployment shell after an account is registered.
 

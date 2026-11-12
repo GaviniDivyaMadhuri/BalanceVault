@@ -11,6 +11,6 @@ export default defineConfig({
   },
   engine: "classic",
   datasource: {
-    url: env("DATABASE_URL"),
+    url: process.env.MIGRATION_DATABASE_URL || env("DATABASE_URL"),
   },
 });

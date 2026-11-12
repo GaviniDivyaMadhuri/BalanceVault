@@ -20,6 +20,8 @@ This is a demo ledger, not a financial service. Treat every account and amount a
 | User reads another user's ledger by changing an account ID | Ledger lookup scopes account ID and authenticated owner ID in the same query | `backend/test/api.test.js`: missing owned account returns 404 without querying ledger entries |
 | Transfer overdraft or races with another debit | Integer minor units, conditional `balance >= amount` update, serializable transaction, and no success ledger/audit writes on insufficient funds | `backend/test/api.test.js`: insufficient-funds transfer returns 409 and ledger/audit writes are not reached |
 | Transfer writes only one side or an incomplete audit event | Debit, credit, paired ledger entries, and audit event share one database transaction | `backend/routes/accounts.js`: transfer transaction |
+| Runtime service credential tampers with ledger or audit history | Runtime login inherits a non-login role that has no update/delete permission on ledger or audit tables | `backend/prisma/migrations/20261112174200_create_runtime_database_role/migration.sql`; PostgreSQL integration test |
+| Invalid negative balance or zero/negative ledger amount is stored | Database check constraints enforce nonnegative balances and positive ledger amounts | `backend/prisma/migrations/20261112173800_enforce_ledger_invariants/migration.sql`; PostgreSQL integration test verifies constraint violations |
 | Admin or suspended/frozen account bypasses account controls | Database role/status checked on each request; transfers require both accounts and the recipient user to be active | `backend/test/api.test.js`: suspended destination cannot be credited; `backend/middleware/authMiddleware.js`, `backend/routes/accounts.js` |
 | Brute-force login or registration abuse | Authentication endpoints rate-limited; production requires Redis-backed shared counters | `backend/middleware/rateLimit.js`; test Redis connectivity through `/ready` |
 | Cross-site frontend calls or oversized JSON payload | Production CORS allowlist, 10 KB JSON limit, and one trusted reverse-proxy hop | `backend/server.js` configuration |
@@ -30,7 +32,7 @@ This is a demo ledger, not a financial service. Treat every account and amount a
 
 - The challenge statement supplied for this project is high-level and does not enumerate individual functional acceptance checks.
 - The public frontend responds, but the API host currently returns HTTP 503; a full browser end-to-end session has not been verified.
-- The repository config uses one database URL; separate PostgreSQL roles mentioned in the submission draft are not implemented or verified here.
+- The database runtime and migration roles are configured and locally verified; deployment still requires supplying both corresponding connection strings to Render.
 - Production database migrations, Redis service behavior, and administrator bootstrap have not been verified against the live deployment.
 - This demo has no transfer idempotency key, fraud controls, user-driven recovery, or independent tamper-evident audit storage. Repeated client submissions may create multiple valid transfers.
 - The API does not model currency conversion, fees, limits, dispute handling, or regulatory requirements.
