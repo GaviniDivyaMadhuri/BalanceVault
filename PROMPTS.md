@@ -171,3 +171,20 @@ After the API is live, connect and deploy a public frontend that uses its actual
 - Deployed `balancevault-frontend-v2`, configured the API to allow both the previous frontend origin and the new one, and verified the new page displays “API Connected.” Also checked API `/health` and `/ready` (HTTP 200) and the new frontend's CORS preflight (HTTP 204). Account and ledger workflows remain unverified end to end.
 
 **Commit:** `832ffbf` — API deployment URL configuration; the frontend was built from this repository revision.
+
+## Entry 11 - 2026-11-12: Recovering access to the existing administrator
+
+**Prompt used:**
+Find a safe way to regain access to the existing administrator account after its password was forgotten, without exposing credentials or enabling a public reset endpoint.
+
+**AI-generated output:**
+- Added a local-only CLI that targets an existing active administrator, requires an explicit confirmation, reads the new password without echoing it, and writes a password-reset audit event in the same transaction.
+
+**What needed improvement:**
+- The app has no password-reset flow, and the password hash cannot be reversed to recover the old password. The administrator must choose a new password through an authorized local operation.
+
+**What I did:**
+- Added `npm run admin:reset-password`, which uses the ignored local `backend/.env`, validates the admin role/status, requires the operator to type `RESET`, confirms the new password, and leaves the Render/API configuration unchanged. The reset has not been run; the database password remains unchanged until the owner runs the command.
+- Verified syntax and reran the backend suite (12 passed; the opt-in PostgreSQL test skipped).
+
+**Commit:** `8d23022` — local administrator password reset tool.
