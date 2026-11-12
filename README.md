@@ -95,9 +95,9 @@ The PostgreSQL integration test uses a transaction that is intentionally rolled 
 
 ## Deployment status
 
-The public frontend URL is [balancevault-frontend.onrender.com](https://balancevault-frontend.onrender.com). The API is deployed at [balancevault-api-v2.onrender.com](https://balancevault-api-v2.onrender.com); `/health` and `/ready` both returned HTTP 200 on 2026-11-12. The first API deployment built and migrated successfully but exited because the Redis rate-limit store sent its initial commands before the Redis client connected. The startup path was corrected, the new revision was deployed, and both endpoints were rechecked.
+The current public frontend is [balancevault-frontend-v2.onrender.com](https://balancevault-frontend-v2.onrender.com); it loaded and displayed “API Connected” on 2026-11-12. The API is [balancevault-api-v2.onrender.com](https://balancevault-api-v2.onrender.com); `/health` and `/ready` returned HTTP 200, and a CORS preflight from the frontend returned HTTP 204. The first API deployment built and migrated successfully but exited because the Redis rate-limit store sent its initial commands before the Redis client connected. The startup path was corrected and the new revision deployed.
 
-The existing frontend service is not present in the Render workspace used for the API, so its build environment could not be updated there. Set its `VITE_API_URL` to `https://balancevault-api-v2.onrender.com` and redeploy it, then verify registration, login, account, transfer, and admin workflows.
+The previous `balancevault-frontend.onrender.com` service was not present in the Render workspace used for the API. A new free static site was deployed instead, configured with `VITE_API_URL=https://balancevault-api-v2.onrender.com`. The UI's API health connection is verified; registration, login, account, transfer, and admin workflows still need end-to-end verification with a test account.
 
 ## Render deployment configuration
 

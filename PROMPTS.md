@@ -155,3 +155,19 @@ Investigate why the next Render deployment failed after the build and database m
 - Ran the backend test suite; all 12 active tests passed and the opt-in PostgreSQL integration test remained skipped by default. Deployed the fix and verified that `/health` and `/ready` both returned HTTP 200.
 
 **Commit:** `1f56978` — Redis rate-limit startup fix.
+
+## Entry 10 - 2026-11-12: Deploying a frontend against the live API
+
+**Prompt used:**
+After the API is live, connect and deploy a public frontend that uses its actual API URL, while keeping the deployment on the free tier.
+
+**AI-generated output:**
+- Created a free Render static site from the public repository, configured its frontend root/build/publish settings and `VITE_API_URL`, and allowed its origin in the API CORS configuration.
+
+**What needed improvement:**
+- The earlier frontend service was not present in the accessible Render workspace, so its environment could not be updated. A new static site with its own URL was needed.
+
+**What I did:**
+- Deployed `balancevault-frontend-v2`, configured the API to allow both the previous frontend origin and the new one, and verified the new page displays “API Connected.” Also checked API `/health` and `/ready` (HTTP 200) and the new frontend's CORS preflight (HTTP 204). Account and ledger workflows remain unverified end to end.
+
+**Commit:** `832ffbf` — API deployment URL configuration; the frontend was built from this repository revision.

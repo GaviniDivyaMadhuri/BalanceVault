@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: balancevault-api
+    name: balancevault-api-v2
     runtime: node
     rootDir: backend
     buildCommand: npm install --include=dev --no-audit --no-fund && npm run db:generate
@@ -18,13 +18,13 @@ services:
       - key: REDIS_URL
         sync: false
       - key: FRONTEND_ORIGIN
-        value: https://balancevault-frontend.onrender.com
+        value: https://balancevault-frontend.onrender.com,https://balancevault-frontend-v2.onrender.com
 
   - type: web
-    name: balancevault-frontend
+    name: balancevault-frontend-v2
     runtime: static
     rootDir: frontend
-    buildCommand: npm ci && npm run build
+    buildCommand: npm install --include=dev --no-audit --no-fund && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
